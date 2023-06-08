@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelApi.Models;
 
-namespace TravelApi.Controllers.v1
+namespace TravelApi.Controllers
 {   
   [Route("api/v{version:apiVersion}/[controller]")]
   [ApiController]

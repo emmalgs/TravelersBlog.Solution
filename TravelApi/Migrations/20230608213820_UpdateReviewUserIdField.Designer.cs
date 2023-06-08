@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TravelApi.Models;
 
@@ -10,9 +11,10 @@ using TravelApi.Models;
 namespace TravelApi.Migrations
 {
     [DbContext(typeof(TravelApiContext))]
-    partial class TravelApiContextModelSnapshot : ModelSnapshot
+    [Migration("20230608213820_UpdateReviewUserIdField")]
+    partial class UpdateReviewUserIdField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

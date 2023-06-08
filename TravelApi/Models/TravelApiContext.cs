@@ -1,14 +1,15 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace TravelApi.Models
 {
-  public class TravelApiContext : DbContext
+  public class TravelApiContext : IdentityDbContext<User>
   {
     public DbSet<Country> Countries { get; set; }
     public DbSet<Review> Reviews { get; set; }
-    public DbSet<User> Users { get; set; }
 
-    public TravelApiContext(DbContextOptions<TravelApiContext> options) : base(options)
+    public TravelApiContext(DbContextOptions options) : base(options)
     {
     }
 
@@ -26,6 +27,12 @@ namespace TravelApi.Models
           new Country { CountryId = 8, Name = "Coconut Land", Language = "Nut", Climate = "Desert Island Vibe", Population = 2 },
           new Country { CountryId = 9, Name = "Magnet Calendar", Language = "Sharpie", Climate = "Glossy", Population = 7600 }
         );
+
+        base.OnModelCreating(builder);
+        builder.Entity<IdentityUserLogin<string>>(entity =>
+        {
+            entity.HasKey(x => x.UserId);
+        });
     }
   }
 }

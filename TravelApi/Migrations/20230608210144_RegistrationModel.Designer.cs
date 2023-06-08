@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TravelApi.Models;
 
@@ -10,9 +11,10 @@ using TravelApi.Models;
 namespace TravelApi.Migrations
 {
     [DbContext(typeof(TravelApiContext))]
-    partial class TravelApiContextModelSnapshot : ModelSnapshot
+    [Migration("20230608210144_RegistrationModel")]
+    partial class RegistrationModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,14 +255,17 @@ namespace TravelApi.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("UserId")
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId1")
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("ReviewId");
 
                     b.HasIndex("CountryId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Reviews");
                 });
@@ -390,7 +395,7 @@ namespace TravelApi.Migrations
 
                     b.HasOne("TravelApi.Models.User", null)
                         .WithMany("Reviews")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("TravelApi.Models.Country", b =>

@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelApi.Models;
+using Microsoft.AspNetCore.Identity;
 
-namespace TravelApi.Controllers.v1
+
+namespace TravelApi.Controllers
 {
   [Route("api/v{version:apiVersion}/[controller]")]
   [ApiController]
@@ -12,32 +14,49 @@ namespace TravelApi.Controllers.v1
   public class UsersController : ControllerBase
   {
     private readonly TravelApiContext _db;
+    private readonly UserManager<User> _userManager;
 
-    public UsersController(TravelApiContext db)
+    public UsersController(UserManager<User> userManager, TravelApiContext db)
     {
       _db = db;
+      _userManager = userManager;
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterModel model)
+    {
+      if (ModelState.IsValid)
+      {
+        User user = new Models.User { UserName = model.Username, Email = model.Email };
+        IdentityResult result = await _userManager.CreateAsync(user, model.Password);
+        if (result.Succeeded)
+        {
+          return Ok(new { Message = "Registration successful" });
+        }
+
+        foreach (var error in result.Errors)
+        {
+          ModelState.AddModelError("", error.Description);
+        }
+      }
+
+      return BadRequest(ModelState);
     }
 
     [HttpGet]
-    public async Task<List<User>> Get(string username)
+    public IActionResult GetUsers()
     {
-      IQueryable<User> query = _db.Users 
-                                  .Include(user => user.Reviews)
-                                  .AsQueryable();
-      if (username != null)
-      {
-        query = query.Where(entry => entry.UserName == username);
-      }
+      var users = _userManager.Users.Include(u => u.Reviews);
 
-      return await query.ToListAsync();
+      return Ok(users);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<User>> GetUser(int id)
+    public async Task<ActionResult<User>> GetUser(string id)
     {
       User user = await _db.Users
                                   .Include(user => user.Reviews)
-                                  .FirstOrDefaultAsync(user => user.UserId == id);
+                                  .FirstOrDefaultAsync(user => user.Id == id);
 
       if (user == null)
       {
@@ -47,18 +66,10 @@ namespace TravelApi.Controllers.v1
       return user;
     }
 
-    [HttpPost]
-    public async Task<ActionResult<User>> Post([FromBody] User user)
-    {
-      _db.Users.Add(user);
-      await _db.SaveChangesAsync();
-      return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, user);
-    }
-
     [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, User user)
+    public async Task<IActionResult> Put(string id, User user)
     {
-      if (id != user.UserId)
+      if (id != user.Id)
       {
         return BadRequest();
       }
@@ -85,7 +96,7 @@ namespace TravelApi.Controllers.v1
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUser(int id)
+    public async Task<IActionResult> DeleteUser(string id)
     {
       User user = await _db.Users.FindAsync(id);
       if (user == null)
@@ -98,13 +109,9 @@ namespace TravelApi.Controllers.v1
 
       return NoContent();
     }
-    private bool UserExists(int id)
-    {
-      return _db.Users.Any(e => e.UserId == id);
-    }
 
     [HttpPut("{userId}/reviews/{reviewId}")]
-    public async Task<IActionResult> Put(int userId, int reviewId, Review review)
+    public async Task<IActionResult> Put(string userId, int reviewId, Review review)
     {
       if (reviewId != review.ReviewId)
       {
@@ -139,7 +146,7 @@ namespace TravelApi.Controllers.v1
     }
 
     [HttpDelete("{userId}/reviews/{reviewId}")]
-    public async Task<IActionResult> DeleteReview(int reviewId, int userId)
+    public async Task<IActionResult> DeleteReview(int reviewId, string userId)
     {
       Review review = await _db.Reviews.FindAsync(reviewId);
       if (review == null)
@@ -156,34 +163,10 @@ namespace TravelApi.Controllers.v1
 
       return NoContent();
     }
-    
-    [MapToApiVersion("2.0")]
-    [HttpPost("{userId}/reviews")]
-    public async Task<ActionResult<Review>> PostReview(Review review)
+
+    private bool UserExists(string id)
     {
-      Country thisCountry = await _db.Countries
-                                        .Include(country => country.Reviews)
-                                        .FirstOrDefaultAsync(country => country.CountryId == review.CountryId);
-      User thisUser = await _db.Users
-                              .Include(user => user.Reviews)
-                              .FirstOrDefaultAsync(user => user.UserId == review.UserId);
-      if (thisCountry == null)
-      {
-        return NotFound("this country doesn't exist");
-      }
-      else if (thisUser == null)
-      {
-        return NotFound("this user does not exist");
-      }
-      else
-      {
-        _db.Reviews.Add(review);
-        await _db.SaveChangesAsync();
-        thisUser.Reviews.Add(review);
-        thisCountry.Reviews.Add(review);
-        await _db.SaveChangesAsync();
-        return CreatedAtAction(nameof(ReviewsController.GetReview), new { id = review.ReviewId }, review);
-      }
+      return _db.Users.Any(e => e.Id == id);
     }
 
     private bool ReviewExists(int id)

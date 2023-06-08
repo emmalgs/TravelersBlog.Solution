@@ -7,6 +7,7 @@ namespace TravelApi.Controllers.v1
   [Route("api/v{version:apiVersion}/[controller]")]
   [ApiController]
   [ApiVersion("1.0")]
+  [ApiVersion("2.0")]
 
   public class UsersController : ControllerBase
   {
@@ -16,7 +17,7 @@ namespace TravelApi.Controllers.v1
     {
       _db = db;
     }
-    [MapToApiVersion("1.0")]
+
     [HttpGet]
     public async Task<List<User>> Get(string username)
     {
@@ -30,7 +31,7 @@ namespace TravelApi.Controllers.v1
 
       return await query.ToListAsync();
     }
-    [MapToApiVersion("1.0")]
+
     [HttpGet("{id}")]
     public async Task<ActionResult<User>> GetUser(int id)
     {
@@ -46,8 +47,6 @@ namespace TravelApi.Controllers.v1
       return user;
     }
 
-    
-    [MapToApiVersion("1.0")]
     [HttpPost]
     public async Task<ActionResult<User>> Post([FromBody] User user)
     {
@@ -85,7 +84,6 @@ namespace TravelApi.Controllers.v1
       return NoContent();
     }
 
-    [MapToApiVersion("1.0")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(int id)
     {
@@ -140,7 +138,6 @@ namespace TravelApi.Controllers.v1
       return NoContent();
     }
 
-    [MapToApiVersion("1.0")]
     [HttpDelete("{userId}/reviews/{reviewId}")]
     public async Task<IActionResult> DeleteReview(int reviewId, int userId)
     {
@@ -158,6 +155,35 @@ namespace TravelApi.Controllers.v1
       await _db.SaveChangesAsync();
 
       return NoContent();
+    }
+    
+    [MapToApiVersion("2.0")]
+    [HttpPost("{userId}/reviews")]
+    public async Task<ActionResult<Review>> PostReview(Review review)
+    {
+      Country thisCountry = await _db.Countries
+                                        .Include(country => country.Reviews)
+                                        .FirstOrDefaultAsync(country => country.CountryId == review.CountryId);
+      User thisUser = await _db.Users
+                              .Include(user => user.Reviews)
+                              .FirstOrDefaultAsync(user => user.UserId == review.UserId);
+      if (thisCountry == null)
+      {
+        return NotFound("this country doesn't exist");
+      }
+      else if (thisUser == null)
+      {
+        return NotFound("this user does not exist");
+      }
+      else
+      {
+        _db.Reviews.Add(review);
+        await _db.SaveChangesAsync();
+        thisUser.Reviews.Add(review);
+        thisCountry.Reviews.Add(review);
+        await _db.SaveChangesAsync();
+        return CreatedAtAction(nameof(ReviewsController.GetReview), new { id = review.ReviewId }, review);
+      }
     }
 
     private bool ReviewExists(int id)

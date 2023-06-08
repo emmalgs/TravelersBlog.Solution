@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelApi.Models;
 
-namespace TravelApi.Controllers.v2
+namespace TravelApi.Controllers.v1
 {   
   [Route("api/v{version:apiVersion}/[controller]")]
   [ApiController]
+  [ApiVersion("1.0")]
   [ApiVersion("2.0")]
+  
   public class CountriesController : ControllerBase
   {
     private readonly TravelApiContext _db;
@@ -16,7 +18,6 @@ namespace TravelApi.Controllers.v2
       _db = db;
     }
 
-    [MapToApiVersion("2.0")]
     [HttpGet]
     public async Task<List<Country>> Get(int pageNumber, int pageSize, string name, string language, int population, string climate, string sortBy, bool random=false)
     {
@@ -68,8 +69,6 @@ namespace TravelApi.Controllers.v2
       return await query.ToListAsync();
     }
 
-    // GET: api/Countries/7
-    [MapToApiVersion("2.0")]
     [HttpGet("{id}")]
     public async Task<ActionResult<Country>> GetCountry(int id)
     {
@@ -85,8 +84,6 @@ namespace TravelApi.Controllers.v2
       return country;
     }
 
-    // POST api/countries
-    [MapToApiVersion("2.0")]
     [HttpPost]
     public async Task<ActionResult<Country>> Post([FromBody] Country country)
     {
@@ -96,7 +93,6 @@ namespace TravelApi.Controllers.v2
     }
 
     // PUT: api/Countries/7
-    [MapToApiVersion("2.0")]
     [HttpPut("{id}")]
     public async Task<IActionResult> Put(int id, Country country)
     {
@@ -126,8 +122,6 @@ namespace TravelApi.Controllers.v2
       return NoContent();
     }
 
-    // DELETE: api/Countries/7
-    [MapToApiVersion("2.0")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCountry(int id)
     {

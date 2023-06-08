@@ -1,6 +1,7 @@
 # Travel Blogger
 
 ### By Emma Gerigscott and Sarah Reimann
+### Forked from TravelApi.Solution by Eusebie Siebenberg, Emma Gerigscott and Laura Hope
 
 ## Description
 
@@ -47,19 +48,37 @@ Add a review on our travel API! Visit countries you've never heard of before and
   * You should see the new schema in your _Navigator > Schemas_ tab of your MySql Workbench on refresh called ```travel_api```
 
 ## Using This API
-* Endpoints for this API are as follows:
+* Endpoints for **v1.0** API are as follows:
 ```
+
 Countries:
-GET https://localhost:5001/api/countries/
-GET https://localhost:5001/api/countries/{id}
-POST https://localhost:5001/api/countries/
-PUT https://localhost:5001/api/countries/{id}
-DELETE https://localhost:5001/api/countries/{id}
+GET https://localhost:5001/api/v1/countries/
+GET https://localhost:5001/api/v1/countries/{id}
+POST https://localhost:5001/api/v1/countries/
+PUT https://localhost:5001/api/v1/countries/{id}
+DELETE https://localhost:5001/api/v1/countries/{id}
 
 Reviews:
-GET https://localhost:5001/api/reviews/
-POST https://localhost:5001/api/reviews/
-GET https://localhost:5001/api/reviews/{id}
+GET https://localhost:5001/api/v1/reviews/
+POST https://localhost:5001/api/v1/reviews/
+GET https://localhost:5001/api/v1/reviews/{id}
+
+Users:
+GET https://localhost:5001/api/v1/users/
+POST https://localhost:5001/api/v1/users/
+GET https://localhost:5001/api/v1/users/{id}
+PUT https://localhost:5001/api/v1/users/{id}
+DELETE https:///localhost:5001/api/v1/users/{id}
+PUT https:///localhost:5001/api/v1/users/{userId}/reviews/{reviewId}
+DELETE https:///localhost:5001/api/v1/users/{userId}/reviews/{reviewId}
+
+```
+* Endpoints for **v2.0** are:
+```
+Countries (same as v1.0)
+Reviews:
+GET https://localhost:5001/api/v2/reviews/
+GET https://localhost:5001/api/v2/reviews/{id}
 
 Users:
 GET https://localhost:5001/api/users/
@@ -67,10 +86,11 @@ POST https://localhost:5001/api/users/
 GET https://localhost:5001/api/users/{id}
 PUT https://localhost:5001/api/users/{id}
 DELETE https:///localhost:5001/users/{id}
+POST https://localhost:5001/api/users/{userId}/reviews/
 PUT https:///localhost:5001/users/{userId}/reviews/{reviewId}
 DELETE https:///localhost:5001/users/{userId}/reviews/{reviewId}
-
 ```
+
 * In your terminal run ```dotnet watch run``` in the project directory.
 * In your browser open https://localhost:5001/swagger/index.html
 * Use the GUI to navigate the API
@@ -116,11 +136,5 @@ DELETE https:///localhost:5001/users/{userId}/reviews/{reviewId}
 No known bugs as of 6/7/23
 
 ## [MIT](https://opensource.org/license/mit/) License 
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Copyright © 2023 Emma Gerigscott, Sarah Reimann

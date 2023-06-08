@@ -7,6 +7,7 @@ namespace TravelApi.Controllers.v1
   [Route("api/v{version:apiVersion}/[controller]")]
   [ApiController]
   [ApiVersion("1.0")]
+  [ApiVersion("2.0")]
   public class ReviewsController : ControllerBase
   {
     private readonly TravelApiContext _db;
@@ -16,7 +17,6 @@ namespace TravelApi.Controllers.v1
       _db = db;
     }
 
-    [MapToApiVersion("1.0")]
     [HttpGet]
     public async Task<List<Review>> Get(int pageNumber, int pageSize, string text, int countryId, int userId, string countryName, string userName, bool random = false)
     {
@@ -61,7 +61,6 @@ namespace TravelApi.Controllers.v1
       return await query.ToListAsync();
     }
 
-    [MapToApiVersion("1.0")]
     [HttpGet("{id}")]
     public async Task<ActionResult<Review>> GetReview(int id)
     {
@@ -75,6 +74,7 @@ namespace TravelApi.Controllers.v1
       return review;
     }
 
+    [MapToApiVersion("1.0")]
     [HttpPost]
     public async Task<ActionResult<Review>> Post([FromBody] Review review)
     {
@@ -103,55 +103,5 @@ namespace TravelApi.Controllers.v1
         return CreatedAtAction(nameof(GetReview), new { id = review.ReviewId }, review);
       }
     }
-
-    // [HttpPut("{id}")]
-    // public async Task<IActionResult> Put(int id, Review review)
-    // {
-    //   if (id != review.ReviewId)
-    //   {
-    //     return BadRequest();
-    //   }
-
-    //   _db.Reviews.Update(review);
-
-    //   try
-    //   {
-    //     await _db.SaveChangesAsync();
-    //   }
-    //   catch (DbUpdateConcurrencyException)
-    //   {
-    //     if (!ReviewExists(id))
-    //     {
-    //       return NotFound();
-    //     }
-    //     else
-    //     {
-    //       throw;
-    //     }
-    //   }
-
-    //   return NoContent();
-    // }
-
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeleteReview(int id)
-    // {
-    //   Review review = await _db.Reviews.FindAsync(id);
-    //   if (review == null)
-    //   {
-    //     return NotFound();
-    //   }
-
-    //   _db.Reviews.Remove(review);
-    //   await _db.SaveChangesAsync();
-
-    //   return NoContent();
-    // }
-
-    // private bool ReviewExists(int id)
-    // {
-    //   return _db.Reviews.Any(e => e.ReviewId == id);
-    // }
-
   }
 }

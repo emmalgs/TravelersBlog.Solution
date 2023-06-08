@@ -10,7 +10,7 @@ using TravelApi.Models;
 namespace TravelApi.Migrations
 {
     [DbContext(typeof(TravelApiContext))]
-    [Migration("20230606165907_Initial")]
+    [Migration("20230608160904_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,6 +98,22 @@ namespace TravelApi.Migrations
                             Language = "Sporkian",
                             Name = "Sporkonia",
                             Population = 840
+                        },
+                        new
+                        {
+                            CountryId = 8,
+                            Climate = "Desert Island Vibe",
+                            Language = "Nut",
+                            Name = "Coconut Land",
+                            Population = 2
+                        },
+                        new
+                        {
+                            CountryId = 9,
+                            Climate = "Glossy",
+                            Language = "Sharpie",
+                            Name = "Magnet Calendar",
+                            Population = 7600
                         });
                 });
 

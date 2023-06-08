@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelApi.Models;
 
-namespace TravelApi.Controllers
+namespace TravelApi.Controllers.v1
 {
-  [Route("api/[controller]")]
+  [Route("api/v{version:apiVersion}/[controller]")]
   [ApiController]
+  [ApiVersion("1.0")]
 
   public class UsersController : ControllerBase
   {
@@ -15,7 +16,7 @@ namespace TravelApi.Controllers
     {
       _db = db;
     }
-
+    [MapToApiVersion("1.0")]
     [HttpGet]
     public async Task<List<User>> Get(string username)
     {
@@ -29,7 +30,7 @@ namespace TravelApi.Controllers
 
       return await query.ToListAsync();
     }
-    
+    [MapToApiVersion("1.0")]
     [HttpGet("{id}")]
     public async Task<ActionResult<User>> GetUser(int id)
     {
@@ -46,7 +47,7 @@ namespace TravelApi.Controllers
     }
 
     
-
+    [MapToApiVersion("1.0")]
     [HttpPost]
     public async Task<ActionResult<User>> Post([FromBody] User user)
     {
@@ -84,6 +85,7 @@ namespace TravelApi.Controllers
       return NoContent();
     }
 
+    [MapToApiVersion("1.0")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(int id)
     {
@@ -137,6 +139,8 @@ namespace TravelApi.Controllers
 
       return NoContent();
     }
+
+    [MapToApiVersion("1.0")]
     [HttpDelete("{userId}/reviews/{reviewId}")]
     public async Task<IActionResult> DeleteReview(int reviewId, int userId)
     {

@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelApi.Models;
 
-namespace TravelApi.Controllers
+namespace TravelApi.Controllers.v2
 {   
-  [Route("api/[controller]")]
+  [Route("api/v{version:apiVersion}/[controller]")]
   [ApiController]
+  [ApiVersion("2.0")]
   public class CountriesController : ControllerBase
   {
     private readonly TravelApiContext _db;
@@ -15,7 +16,7 @@ namespace TravelApi.Controllers
       _db = db;
     }
 
-    // GET api/countries
+    [MapToApiVersion("2.0")]
     [HttpGet]
     public async Task<List<Country>> Get(int pageNumber, int pageSize, string name, string language, int population, string climate, string sortBy, bool random=false)
     {
@@ -68,6 +69,7 @@ namespace TravelApi.Controllers
     }
 
     // GET: api/Countries/7
+    [MapToApiVersion("2.0")]
     [HttpGet("{id}")]
     public async Task<ActionResult<Country>> GetCountry(int id)
     {
@@ -84,6 +86,7 @@ namespace TravelApi.Controllers
     }
 
     // POST api/countries
+    [MapToApiVersion("2.0")]
     [HttpPost]
     public async Task<ActionResult<Country>> Post([FromBody] Country country)
     {
@@ -93,6 +96,7 @@ namespace TravelApi.Controllers
     }
 
     // PUT: api/Countries/7
+    [MapToApiVersion("2.0")]
     [HttpPut("{id}")]
     public async Task<IActionResult> Put(int id, Country country)
     {
@@ -123,6 +127,7 @@ namespace TravelApi.Controllers
     }
 
     // DELETE: api/Countries/7
+    [MapToApiVersion("2.0")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCountry(int id)
     {

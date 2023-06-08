@@ -87,7 +87,9 @@ namespace TravelApi.Migrations
                     { 4, "Sweltering and Lava", "Dragonian", "Western Democratic Coalition of Dragons", 3 },
                     { 5, "Gooey", "Swiss", "Cheese Island", 72 },
                     { 6, "Subtropical", "Flubber", "Pants", 7200 },
-                    { 7, "Hot and Damp", "Sporkian", "Sporkonia", 840 }
+                    { 7, "Hot and Damp", "Sporkian", "Sporkonia", 840 },
+                    { 8, "Desert Island Vibe", "Nut", "Coconut Land", 2 },
+                    { 9, "Glossy", "Sharpie", "Magnet Calendar", 7600 }
                 });
 
             migrationBuilder.CreateIndex(

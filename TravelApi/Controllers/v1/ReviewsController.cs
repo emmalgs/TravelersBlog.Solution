@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TravelApi.Models;
 
-namespace TravelApi.Controllers
+namespace TravelApi.Controllers.v1
 {
-  [Route("api/[controller]")]
+  [Route("api/v{version:apiVersion}/[controller]")]
   [ApiController]
+  [ApiVersion("1.0")]
   public class ReviewsController : ControllerBase
   {
     private readonly TravelApiContext _db;
@@ -15,7 +16,7 @@ namespace TravelApi.Controllers
       _db = db;
     }
 
-    // GET api/reviews
+    [MapToApiVersion("1.0")]
     [HttpGet]
     public async Task<List<Review>> Get(int pageNumber, int pageSize, string text, int countryId, int userId, string countryName, string userName, bool random = false)
     {
@@ -60,7 +61,7 @@ namespace TravelApi.Controllers
       return await query.ToListAsync();
     }
 
-
+    [MapToApiVersion("1.0")]
     [HttpGet("{id}")]
     public async Task<ActionResult<Review>> GetReview(int id)
     {

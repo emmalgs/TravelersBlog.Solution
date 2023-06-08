@@ -15,11 +15,13 @@ namespace TravelApi.Controllers
   {
     private readonly TravelApiContext _db;
     private readonly UserManager<User> _userManager;
+    private readonly SignInManager<User> _signInManager;
 
-    public UsersController(UserManager<User> userManager, TravelApiContext db)
+    public UsersController(UserManager<User> userManager, SignInManager<User> signInManager, TravelApiContext db)
     {
       _db = db;
       _userManager = userManager;
+      _signInManager = signInManager;
     }
 
     [HttpPost("register")]
@@ -40,6 +42,22 @@ namespace TravelApi.Controllers
         }
       }
 
+      return BadRequest(ModelState);
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult> Login(LoginModel model)
+    {
+      if (ModelState.IsValid)
+      {
+        Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, isPersistent: true, lockoutOnFailure: false);
+        if (result.Succeeded)
+        {
+          return Ok(new { Message = "Sign in successful" });
+        }
+
+        ModelState.AddModelError("", "Invalid username or password");
+      }
       return BadRequest(ModelState);
     }
 
